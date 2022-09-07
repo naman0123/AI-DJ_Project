@@ -1,0 +1,11 @@
+body {
+    background-size: cover;
+}
+
+canvas {
+    border: none;
+    border-radius: 20px;
+    background-color: rgb(237, 237, 237);
+    padding: 3px;
+    margin: 5px;
+}
