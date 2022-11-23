@@ -4,6 +4,8 @@ leftWristX = 0;
 leftWristY = 0;
 rightWristX = 0;
 rightWristY = 0;
+rightWristScore = 0;
+songStatus = "";
 
 function preload()
 {
@@ -26,6 +28,36 @@ function setup()
 function draw()
 {
     image(video, 0, 0, 700, 500);
+
+    if(stay.isPlaying()) {
+        songStatus = "stay";
+    } else if(shapeOfYou.isPlaying()) {
+        songStatus = "shapeOfYou";
+    } else if (!(stay.isPlaying() || shapeOfYou.isPlaying())) {
+        songStatus = "none";
+    }
+
+    if(rightWristScore > 0.2) {
+        circle(rightWristX, rightWristY, 20);
+        if(songStatus == "shapeOfYou") {
+            shapeOfYou.stop();
+        }
+
+        if(!(songStatus == "stay")) {
+            stay.play();
+            document.getElementById("songName").innerHTML = "Playing stay...";
+        }
+    } else if(leftWristScore > 0.2) {
+        circle(leftWristX, leftWristY, 20);
+        if(songStatus == "stay") {
+            stay.stop();
+        }
+
+        if(!(songStatus == "shapeOfYou")) {
+            shapeOfYou.play();
+            document.getElementById("songName").innerHTML = "Playing shape of you...";
+        }
+    }
 }
 
 function modelLoaded()
@@ -44,5 +76,11 @@ function getPoses(results)
         rightWristX = results[0].pose.rightWrist.x;
         rightWristY = results[0].pose.rightWrist.y;
         console.log("Right wrist X: " + rightWristX + ", Right wrist Y: " + rightWristY + ".");
+
+        rightWristScore = results[0].pose.keypoints[10].score;
+        console.log("Right wrist score: " + rightWristScore);
+
+        leftWristScore = results[0].pose.keypoints[9].score;
+        console.log("Left wrist score: " + leftWristScore);
     }
 }
